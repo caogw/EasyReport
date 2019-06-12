@@ -15,6 +15,7 @@ public class MySqlQueryer extends AbstractQueryer implements Queryer {
         super(dataSource, parameter);
     }
 
+    /**
     @Override
     protected String preprocessSqlText(String sqlText) {
         sqlText = StringUtils.stripEnd(sqlText.trim(), ";");
@@ -25,4 +26,5 @@ public class MySqlQueryer extends AbstractQueryer implements Queryer {
         }
         return sqlText + " limit 1";
     }
+    **/
 }
