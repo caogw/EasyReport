@@ -1,5 +1,8 @@
 package com.easytoolsoft.easyreport.engine.data;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * 报表类
  *
@@ -10,6 +13,15 @@ public class ReportTable {
     private final String sqlText;
     private final int metaDataRowCount;
     private final int metaDataColumnCount;
+    private List<Map<String,Object>> rows;
+
+    public List<Map<String, Object>> getRows() {
+        return rows;
+    }
+
+    public void setRows(List<Map<String, Object>> rows) {
+        this.rows = rows;
+    }
 
     public ReportTable(final String htmlText, final String sqlText, final int metaDataRowCount,
                        final int metaDataColumnCount) {

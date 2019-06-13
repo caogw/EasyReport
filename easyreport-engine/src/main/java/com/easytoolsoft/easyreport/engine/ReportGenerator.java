@@ -1,12 +1,12 @@
 package com.easytoolsoft.easyreport.engine;
 
-import com.easytoolsoft.easyreport.engine.data.AbstractReportDataSet;
-import com.easytoolsoft.easyreport.engine.data.LayoutType;
-import com.easytoolsoft.easyreport.engine.data.ReportDataSource;
-import com.easytoolsoft.easyreport.engine.data.ReportMetaDataSet;
-import com.easytoolsoft.easyreport.engine.data.ReportParameter;
-import com.easytoolsoft.easyreport.engine.data.ReportTable;
+import com.easytoolsoft.easyreport.engine.data.*;
 import com.easytoolsoft.easyreport.engine.query.Queryer;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 报表产生器类
@@ -79,7 +79,18 @@ public class ReportGenerator {
         final ReportBuilder builder = createBuilder(dataSet, parameter);
         final ReportDirector director = new ReportDirector(builder);
         director.build();
-        return builder.getTable();
+        ReportTable reportTable = builder.getTable();
+        List<Map<String,Object>> rows = new ArrayList<>();
+        for (ReportMetaDataRow reportMetaDataRow : dataSet.getMetaData().getRows()) {
+            Map<String,Object> rowMap = new HashMap<>();
+            for(Map.Entry<String, ReportMetaDataCell> entry:reportMetaDataRow.getCells().entrySet()){
+//                System.out.println(entry.getValue().getName()+" "+entry.getValue().getValue());
+                rowMap.put(entry.getValue().getName(),entry.getValue().getValue());
+            }
+            rows.add(rowMap);
+        }
+        reportTable.setRows(rows);
+        return reportTable;
     }
 
     private static ReportBuilder createBuilder(final AbstractReportDataSet reportDataSet,

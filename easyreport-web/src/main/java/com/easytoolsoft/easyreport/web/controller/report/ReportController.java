@@ -23,6 +23,7 @@ import com.easytoolsoft.easyreport.meta.service.ReportService;
 import com.easytoolsoft.easyreport.meta.service.TableReportService;
 import com.easytoolsoft.easyreport.support.annotation.OpLog;
 import com.easytoolsoft.easyreport.support.model.ResponseResult;
+import com.easytoolsoft.easyreport.web.util.ParseHtml;
 import com.easytoolsoft.easyreport.web.util.ReportUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
@@ -126,7 +127,6 @@ public class ReportController {
             data.put("htmlTable", "报表系统错误:" + ex.getMessage());
             log.error("报表系统出错", ex);
         }
-
         return data;
     }
 
@@ -141,14 +141,14 @@ public class ReportController {
                 final Report po = this.reportService.getByUid(uid);
                 final ReportOptions options = this.reportService.parseOptions(po.getOptions());
                 final Map<String, Object> formParameters = this.tableReportService.getFormParameters(
-                    request.getParameterMap(), options.getDataRange());
+                        request.getParameterMap(), options.getDataRange());
                 final ReportDataSet reportDataSet = this.tableReportService.getReportDataSet(po, formParameters);
                 data.put("dimColumnMap", this.chartReportService.getDimColumnMap(reportDataSet));
                 data.put("dimColumns", this.chartReportService.getDimColumns(reportDataSet));
                 data.put("statColumns", this.chartReportService.getStatColumns(reportDataSet));
                 data.put("dataRows", this.chartReportService.getDataRows(reportDataSet));
             } catch (QueryParamsException | NotFoundLayoutColumnException | SQLQueryException |
-                TemplatePraseException ex) {
+                    TemplatePraseException ex) {
                 data.put("msg", ex.getMessage());
                 log.error("报表生成失败", ex);
             } catch (final Exception ex) {
@@ -158,6 +158,8 @@ public class ReportController {
         }
         return data;
     }
+
+
 
     @PostMapping(value = "/table/exportExcel")
     @OpLog(name = "导出报表为Excel")
@@ -170,4 +172,24 @@ public class ReportController {
             log.error("导出Excel失败", ex);
         }
     }
+
+
+    @GetMapping(value = "/table/exportImg/{uid}")
+    @OpLog(name = "导出报表为Excel")
+    //@RequiresPermissions("report.designer:export")
+    public void exportToImg(@PathVariable String uid, final String htmlText,
+                              final HttpServletRequest request, final HttpServletResponse response) {
+        final JSONObject data = new JSONObject();
+        try {
+            ReportUtils.generate(uid, data, request);
+        } catch (QueryParamsException | NotFoundLayoutColumnException | SQLQueryException | TemplatePraseException ex) {
+            data.put("htmlTable", ex.getMessage());
+            log.error("报表生成失败", ex);
+        } catch (final Exception ex) {
+            data.put("htmlTable", "报表系统错误:" + ex.getMessage());
+            log.error("报表系统出错", ex);
+        }
+        ParseHtml.toImg(data.get("htmlTable").toString(),response);
+    }
+
 }
