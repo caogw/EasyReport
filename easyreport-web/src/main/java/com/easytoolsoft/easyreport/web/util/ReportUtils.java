@@ -183,7 +183,8 @@ public class ReportUtils {
             //response.addCookie(new Cookie("fileDownload", "true"));
             response.setHeader("Set-Cookie", "fileDownload=true; path=/");
             //out.write(new byte[]{(byte) 0xEF, (byte) 0xBB, (byte) 0xBF}); // 生成带bom的utf8文件
-            out.write(htmlText.getBytes());
+//            out.write(htmlText.getBytes());
+            ConvertExcel.toCvt(htmlText,out);
             out.flush();
         } catch (final Exception ex) {
             throw new RuntimeException(ex);
