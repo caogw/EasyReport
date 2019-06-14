@@ -1,5 +1,6 @@
 package com.easytoolsoft.easyreport.web.util;
 
+import com.easytoolsoft.easyreport.engine.util.DateUtils;
 import com.google.common.collect.Lists;
 import me.chyxion.xls.TableToXls;
 import org.jsoup.Jsoup;
@@ -73,7 +74,7 @@ public class ParseHtml {
 
         String style = "<style type=\"text/css\">\t.easyreport {\twidth: 100%;}.easyreport td:hover {\toverflow: visible;\twhite-space: normal;\tword-wrap: break-word;}.easyreport .easyreport-header td,.easyreport .easyreport-header td {\theight: 28px;\tbackground: #308ca5;\tborder-right: 1px solid #ccc;\tborder-top: none;\tcolor: #fff;\ttext-align: center;}.easyreport .easyreport-header th {\tbackground: #53b125;}.easyreport tr.easyreport-row {\tbackground: #e6f1f5}.easyreport th,.easyreport td {\tpadding: 8px 10px;\tborder-right: 1px solid #ccc;\tcolor: #36534f;}.easyreport .easyreport-fixed-column {\tbackground: #ecfbd2;\tfont-weight: bold;\tfont-size: 11px;\ttext-align: left;}.easyreport .selected {\tbackground: #fddc30;}.easyreport th {\tbackground: #f7fbfc;\tborder: 1px solid #ccc;\tfont-size: 11px;\tcolor: #333;\ttext-align: center;\tpadding:8px 2px 8px 2px;}.easyreport td {\tborder: 1px solid #ccc;\ttext-align: center;\tfont-size: 11px;\theight: 18px;\ttext-align: center;}</style>";
 
-        JEditorPane ed = new JEditorPane("text/html",style+tableHtml);
+        JEditorPane ed = new JEditorPane("text/html",style+"<p>统计时间："+DateUtils.getNow("yyyy-MM-dd HH:mm")+"</p>"+tableHtml);
         ed.setSize(800,500);
 
         //create a new image
